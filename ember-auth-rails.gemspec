@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["heartsentwined"]
   gem.email         = ["heartsentwined@cogito-lab.com"]
   gem.summary       = 'Ember-auth for Rails'
-  s.description     = <<-EOS
+  gem.description   = <<-EOS
     Ember-auth provides token authentication support to ember.js.
     It is expected to work out of the box with rails + devise.
   EOS
