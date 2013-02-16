@@ -1,1 +1,1 @@
-console.log('ember auth 1');
+console.log('ember auth 2');
