@@ -1,6 +1,7 @@
-# Ember::Auth::Rails
+# ember-auth-rails
 
-TODO: Write a gem description
+`ember-auth` provides token authentication support to
+[ember.js](http://emberjs.com/).
 
 ## Installation
 
@@ -18,7 +19,8 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+See [README](https://github.com/heartsentwined/ember-auth) at the main
+`ember-auth` site.
 
 ## Contributing
 
