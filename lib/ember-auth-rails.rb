@@ -1,4 +1,4 @@
-require "ember-auth/rails/version"
+require 'ember-auth/rails/version'
 
 module EmberAuth
   module Rails
