@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   EOS
   gem.homepage      = 'https://github.com/heartsentwined/ember-auth-rails'
 
-  gem.add_dependency 'ember-rails', ['~> 0.9']
+  gem.add_dependency 'ember-rails', ['~> 0.10']
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
