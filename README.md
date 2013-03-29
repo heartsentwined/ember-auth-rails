@@ -17,6 +17,10 @@ Or install it yourself as:
 
     $ gem install ember-auth-rails
 
+Add `ember-auth` to sprockets. `application.js`:
+
+    //= require ember-auth
+
 ## Usage
 
 See [README](https://github.com/heartsentwined/ember-auth) at the main
