@@ -22,26 +22,24 @@
       }
       return this.ajax(this.resolveUrl(Auth.Config.get('tokenCreateUrl')), 'POST', {
         data: data,
-        async: async,
-        success: function(json, status, jqxhr) {
-          var model;
-          _this.set('authToken', json[Auth.Config.get('tokenKey')]);
-          _this.set('currentUserId', json[Auth.Config.get('idKey')]);
-          if (model = Auth.Config.get('userModel')) {
-            _this.set('currentUser', model.find(_this.get('currentUserId')));
-          }
-          _this.set('jqxhr', jqxhr);
-          return _this.trigger('signInSuccess');
-        },
-        error: function(jqxhr) {
-          _this.set('jqxhr', jqxhr);
-          return _this.trigger('signInError');
-        },
-        complete: function(jqxhr) {
-          _this.set('prevRoute', null);
-          _this.set('jqxhr', jqxhr);
-          return _this.trigger('signInComplete');
+        async: async
+      }).done(function(json, status, jqxhr) {
+        var model;
+        _this.set('authToken', json[Auth.Config.get('tokenKey')]);
+        _this.set('currentUserId', json[Auth.Config.get('idKey')]);
+        if (model = Auth.Config.get('userModel')) {
+          _this.set('currentUser', model.find(_this.get('currentUserId')));
         }
+        _this.set('json', json);
+        _this.set('jqxhr', jqxhr);
+        return _this.trigger('signInSuccess');
+      }).fail(function(jqxhr) {
+        _this.set('jqxhr', jqxhr);
+        return _this.trigger('signInError');
+      }).always(function(jqxhr) {
+        _this.set('prevRoute', null);
+        _this.set('jqxhr', jqxhr);
+        return _this.trigger('signInComplete');
       });
     },
     signOut: function(data) {
@@ -57,23 +55,20 @@
       }
       return this.ajax(this.resolveUrl(Auth.Config.get('tokenDestroyUrl')), 'DELETE', {
         data: data,
-        async: async,
-        success: function(json, status, jqxhr) {
-          _this.set('authToken', null);
-          _this.set('currentUserId', null);
-          _this.set('currentUser', null);
-          _this.set('jqxhr', jqxhr);
-          return _this.trigger('signOutSuccess');
-        },
-        error: function(jqxhr) {
-          _this.set('jqxhr', jqxhr);
-          return _this.trigger('signOutError');
-        },
-        complete: function(jqxhr) {
-          _this.set('prevRoute', null);
-          _this.set('jqxhr', jqxhr);
-          return _this.trigger('signOutComplete');
-        }
+        async: async
+      }).done(function(json, status, jqxhr) {
+        _this.set('authToken', null);
+        _this.set('currentUserId', null);
+        _this.set('currentUser', null);
+        _this.set('jqxhr', jqxhr);
+        return _this.trigger('signOutSuccess');
+      }).fail(function(jqxhr) {
+        _this.set('jqxhr', jqxhr);
+        return _this.trigger('signOutError');
+      }).always(function(jqxhr) {
+        _this.set('prevRoute', null);
+        _this.set('jqxhr', jqxhr);
+        return _this.trigger('signOutComplete');
       });
     },
     resolveUrl: function(path) {
@@ -108,8 +103,13 @@
     ajax: function(url, type, hash) {
       var token;
       if (token = this.get('authToken')) {
-        hash.data || (hash.data = {});
-        hash.data[Auth.Config.get('tokenKey')] = this.get('authToken');
+        if (Auth.Config.get('requestHeaderAuthorization')) {
+          hash.headers || (hash.headers = {});
+          hash.headers[Auth.Config.get('requestHeaderKey')] = this.get('authToken');
+        } else {
+          hash.data || (hash.data = {});
+          hash.data[Auth.Config.get('tokenKey')] = this.get('authToken');
+        }
       }
       hash.url = url;
       hash.type = type;
@@ -129,6 +129,8 @@
     idKey: null,
     userModel: null,
     baseUrl: null,
+    requestHeaderAuthorization: false,
+    requestHeaderKey: null,
     signInRoute: null,
     signOutRoute: null,
     authRedirect: false,
@@ -139,7 +141,8 @@
     rememberMe: false,
     rememberTokenKey: null,
     rememberPeriod: 14,
-    rememberAutoRecall: true
+    rememberAutoRecall: true,
+    rememberUsingLocalStorage: false
   });
 
   Auth.Route = Em.Route.extend(Em.Evented, {
@@ -208,7 +211,7 @@
       if (!Auth.Config.get('rememberMe')) {
         return;
       }
-      if (!Auth.get('authToken') && (token = $.cookie('ember-auth-remember-me'))) {
+      if (!Auth.get('authToken') && (token = this.retrieveToken())) {
         data = {};
         if (opts.async != null) {
           data['async'] = opts.async;
@@ -218,33 +221,59 @@
       }
     },
     remember: function() {
-      var curToken, json, token;
+      var token;
       if (!Auth.Config.get('rememberMe')) {
         return;
       }
-      json = JSON.parse((Auth.get('jqxhr')).responseText);
-      token = json[Auth.Config.get('rememberTokenKey')];
-      curToken = $.cookie('ember-auth-remember-me');
-      if (token && token !== curToken) {
-        return $.cookie('ember-auth-remember-me', token, {
-          expires: Auth.Config.get('rememberPeriod')
-        });
+      token = Auth.get('json')[Auth.Config.get('rememberTokenKey')];
+      if (token && token !== this.retrieveToken()) {
+        return this.storeToken(token);
       }
     },
     forget: function() {
       if (!Auth.Config.get('rememberMe')) {
         return;
       }
-      return $.removeCookie('ember-auth-remember-me');
+      return this.removeToken();
+    },
+    retrieveToken: function() {
+      if (Auth.Config.get('rememberUsingLocalStorage')) {
+        return localStorage.getItem('ember-auth-remember-me');
+      } else {
+        return $.cookie('ember-auth-remember-me');
+      }
+    },
+    storeToken: function(token) {
+      if (Auth.Config.get('rememberUsingLocalStorage')) {
+        return localStorage.setItem('ember-auth-remember-me', token);
+      } else {
+        return $.cookie('ember-auth-remember-me', token, {
+          expires: Auth.Config.get('rememberPeriod')
+        });
+      }
+    },
+    removeToken: function() {
+      if (Auth.Config.get('rememberUsingLocalStorage')) {
+        return localStorage.removeItem('ember-auth-remember-me');
+      } else {
+        return $.removeCookie('ember-auth-remember-me');
+      }
     }
   });
 
   Auth.Route.reopen({
     redirect: function() {
+      var callback, request, self;
       if (Auth.Config.get('rememberMe') && Auth.Config.get('rememberAutoRecall')) {
-        Auth.Module.RememberMe.recall({
+        if (request = Auth.Module.RememberMe.recall({
           async: false
-        });
+        })) {
+          self = this;
+          callback = this._super;
+          return request.always(function() {
+            return callback.call(self);
+          });
+        }
       }
       return this._super();
     }
