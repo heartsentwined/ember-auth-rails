@@ -21,6 +21,10 @@ Add `ember-auth` to sprockets. `application.js`:
 
     //= require ember-auth
 
+Add the `ember-auth-source` gem to control dependencies explicitly:
+
+    $ gem install ember-auth-source --version '3.0.0'
+
 ## Usage
 
 See [README](https://github.com/heartsentwined/ember-auth) at the main
