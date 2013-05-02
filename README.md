@@ -31,6 +31,8 @@ Add `ember-auth` to sprockets. `application.js`:
 
 ## Usage
 
+Read the [docs](http://ember-auth.herokuapp.com).
+
 See [README](https://github.com/heartsentwined/ember-auth) at the main
 `ember-auth` site.
 
