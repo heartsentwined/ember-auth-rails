@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.date          = Time.now.strftime('%Y-%m-%d')
   gem.summary       = 'Ember-auth for Rails'
   gem.description   = <<-EOS
-    Ember-auth provides token authentication support to ember.js.
+    Ember-auth is an authentication framework for ember.js.
     It is expected to work out of the box with rails + devise.
   EOS
   gem.homepage      = 'https://github.com/heartsentwined/ember-auth-rails'
