@@ -5,25 +5,29 @@
 
 ## Installation
 
-Add this line to your application's Gemfile:
+`Gemfile`:
 
-    gem 'ember-auth-rails'
+```ruby
+gem 'ember-auth-rails'
+gem 'ember-auth-source' # specify versioning here to ensure compatibility
+```
 
-And then execute:
+```sh
+$ bundle update
+```
 
-    $ bundle
+Or install directly:
 
-Or install it yourself as:
-
-    $ gem install ember-auth-rails
+```sh
+$ gem install ember-auth-rails
+$ gem install ember-auth-source --version '5.0.0'
+```
 
 Add `ember-auth` to sprockets. `application.js`:
 
-    //= require ember-auth
-
-Add the `ember-auth-source` gem to control dependencies explicitly:
-
-    $ gem install ember-auth-source --version '3.0.0'
+```javascript
+//= require ember-auth
+```
 
 ## Usage
 
