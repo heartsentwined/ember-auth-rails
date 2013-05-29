@@ -24,5 +24,5 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
 
-  gem.license       = 'GPL-3'
+  gem.license       = 'MIT license'
 end
