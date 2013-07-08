@@ -20,7 +20,7 @@ Or install directly:
 
 ```sh
 $ gem install ember-auth-rails
-$ gem install ember-auth-source --version '7.0.2'
+$ gem install ember-auth-source --version '(your desired version)'
 ```
 
 Add `ember-auth` to sprockets. `application.js`:
