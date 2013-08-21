@@ -18,3 +18,5 @@ tmp
 log
 .rvmrc
 *.bpkg
+.ruby-version
+.ruby-gemset
