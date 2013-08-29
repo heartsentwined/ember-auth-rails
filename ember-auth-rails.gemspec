@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'ember-auth/rails/version'
+require 'ember/auth/rails/version'
 
 Gem::Specification.new do |gem|
   gem.name          = 'ember-auth-rails'
-  gem.version       = EmberAuth::Rails::VERSION
+  gem.version       = Ember::Auth::Rails::VERSION
   gem.authors       = ['heartsentwined']
   gem.email         = ['heartsentwined.me@gmail.com']
   gem.date          = Time.now.strftime('%Y-%m-%d')
