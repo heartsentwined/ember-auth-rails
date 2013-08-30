@@ -1,7 +1,7 @@
 module Ember
   module Auth
     module Rails
-      VERSION = '4.0.3'
+      VERSION = '5.0.0'
     end
   end
 end
