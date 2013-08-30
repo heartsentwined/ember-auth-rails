@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   EOS
   gem.homepage      = 'https://github.com/heartsentwined/ember-auth-rails'
 
-  gem.add_dependency 'ember-auth-source'
+  gem.add_dependency 'ember-auth-source', '>= 8.0.0'
   gem.add_dependency 'rails'
 
   gem.files         = `git ls-files`.split($/)
